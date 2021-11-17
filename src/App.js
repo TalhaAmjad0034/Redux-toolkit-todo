@@ -1,55 +1,46 @@
 import React, { useState } from "react";
 import "./App.css";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addTodo, removeTodo, updateTodo, toggleTodo } from "./redux/todo";
 
 function App() {
-  const [addTodo, setAddTodo] = useState();
-  const [edit, setEdit] = useState();
-  const [todo, setTodo] = useState([
-    {
-      id: 1,
-      text: "Learn React",
-    },
-    {
-      id: 2,
-      text: "Learn Redux",
-    },
-    {
-      id: 3,
-      text: "Learn React Native",
-    },
-  ]);
-  const subHandler = () => {
-    setTodo([...todo, { id: todo.length + 1, text: addTodo }]);
-    setAddTodo("");
-  };
-  const deleteHandler = (item) => {
-    setTodo(todo.filter((t) => t.id !== item));
-    console.log(item);
-  };
-  const editHandler = (itemId) => {
-    todo.map((i) => (i.id === itemId ? `${(i.text = edit)}` : i.text));
-    console.log(edit);
-    setTodo([...todo]);
-    setEdit("");
-  };
+  const { todo } = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
+  const [getTodo, setGetTodo] = useState();
+  const [update, setUpdate] = useState();
+  // const [sendTodo, setSendTodo] = useState({
+  //   id: todo.length + 1,
+  //   text: { getTodo },
+  // });
+  const sendTodo = { id: Date.now(), text: getTodo, isCompleted: false };
   return (
     <div className="App">
-      <h1>Making a counter app using useState</h1>
-      {todo.map((item) => (
-        <div key={item.id}>
-          <p>{item.text}</p>
-          <input onChange={(e) => setEdit(e.target.value)} type="text" />
-          <button onClick={() => editHandler(item.id)}>Edit</button>
-          <button onClick={() => deleteHandler(item.id)}>Delete</button>
-        </div> //key is used to identify the element
+      {/* {console.log(todo[0].text)} */}
+      <h1>Redux todo list</h1>
+      {console.log(todo)}
+      {todo.map((todo) => (
+        <div className="flex" key={todo.id}>
+          <p className={todo.isCompleted ? "completed" : ""}>{todo.text}</p>
+          <div>
+            <button onClick={() => dispatch(removeTodo(todo))}>Remove</button>
+            <input
+              onChange={(e) => setUpdate(e.target.value)}
+              type="text"
+              placeholder="update"
+            />
+            <button onClick={() => dispatch(updateTodo({ update, todo }))}>
+              Update
+            </button>
+            <input onClick={() => dispatch(toggleTodo(todo))} type="checkbox" />
+          </div>
+        </div>
       ))}
+      {console.log(todo)}
       <br />
-      <input
-        value={addTodo}
-        onChange={(e) => setAddTodo(e.target.value)}
-        type="text"
-      />
-      <button onClick={subHandler}>Add</button>
+      <input onChange={(e) => setGetTodo(e.target.value)} type="text" />
+      {console.log(getTodo)}
+      <button onClick={() => dispatch(addTodo(sendTodo))}>Add</button>
     </div>
   );
 }

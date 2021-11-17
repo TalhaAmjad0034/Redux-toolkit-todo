@@ -1,7 +1,15 @@
 .App {
   text-align: center;
 }
-
+.flex {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.flex div {
+  display: flex;
+  align-items: center;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -23,7 +31,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.completed {
+  text-decoration: line-through;
+}
 .App-link {
   color: #61dafb;
 }
